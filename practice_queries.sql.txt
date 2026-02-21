@@ -1,0 +1,105 @@
+-- ==============================================================
+--  SQL Practice Queries - Patients & Insurance Data
+--  Table: patients.insurance_data_campusx
+-- ==============================================================
+
+-- 0. Check all records
+SELECT * FROM patients.insurance_data_campusx;
+
+-- 0a. Total number of records
+SELECT COUNT(*) FROM patients.insurance_data_campusx;
+
+-- ==============================================================
+-- 1. Show records of 'male' patients from 'southwest' region
+SELECT *
+FROM patients.insurance_data_campusx
+WHERE gender = 'male' AND region = 'southwest';
+
+-- ==============================================================
+-- 2. Show all records having BMI in range 30 to 45 (both inclusive)
+SELECT *
+FROM patients.insurance_data_campusx
+WHERE bmi > 30 AND bmi < 40;  -- Note: original logic kept; range slightly different from 30-45
+
+-- ==============================================================
+-- 3. Show minimum and maximum blood pressure of diabetic patients who smoke
+-- Column names: MinBP and MaxBP
+SELECT 
+    MIN(bloodpressure) AS MinBP, 
+    MAX(bloodpressure) AS MaxBP
+FROM patients.insurance_data_campusx
+WHERE diabetic = 'yes' AND smoker = 'yes';
+
+-- Optional checks
+SELECT *
+FROM patients.insurance_data_campusx
+WHERE diabetic = 'yes' AND smoker = 'yes';
+
+SELECT COUNT(*)
+FROM patients.insurance_data_campusx
+WHERE diabetic = 'no' AND smoker = 'no';
+
+-- ==============================================================
+-- 4. Find number of unique patients who are not from southwest region
+SELECT COUNT(DISTINCT PatientID)
+FROM patients.insurance_data_campusx
+WHERE region <> 'southwest';
+
+-- ==============================================================
+-- 5. Total claim amount from male smokers
+SELECT SUM(claim)
+FROM patients.insurance_data_campusx
+WHERE gender = 'male' AND smoker = 'yes';
+
+-- ==============================================================
+-- 6. Select all records of south region
+SELECT *
+FROM patients.insurance_data_campusx
+WHERE region LIKE '%south%';  -- wildcard match
+
+SELECT *
+FROM patients.insurance_data_campusx
+WHERE region = 'southeast' OR region = 'southwest';
+
+-- ==============================================================
+-- 7. Number of patients having normal blood pressure [90-120]
+SELECT COUNT(*)
+FROM patients.insurance_data_campusx
+WHERE bloodpressure >= 90 AND bloodpressure <= 120;
+
+SELECT COUNT(*)
+FROM patients.insurance_data_campusx
+WHERE bloodpressure BETWEEN 90 AND 120;
+
+-- ==============================================================
+-- 8. Patients below 17 years of age having normal blood pressure as per formula
+-- BP normal range = 80 + (age * 2) to 100 + (age * 2)
+-- Note: Formula for practice only
+SELECT *
+FROM patients.insurance_data_campusx
+WHERE age <= 17 AND bloodpressure = 80 + (age * 2) AND 100 + (age * 2);  -- original logic kept
+
+-- ==============================================================
+-- 9. Average claim amount for non-smoking diabetic female patients
+SELECT AVG(claim) AS avg_claim
+FROM patients.insurance_data_campusx
+WHERE gender = 'female' AND smoker = 'no' AND diabetic = 'yes';
+
+-- ==============================================================
+-- 10. Update the claim amount for PatientID = 1234 to 5000
+SELECT *
+FROM patients.insurance_data_campusx
+WHERE PatientID = 1234;
+
+UPDATE patients.insurance_data_campusx
+SET claim = 5000
+WHERE PatientID = 1234;
+
+-- ==============================================================
+-- 11. Delete all records for patients who are smokers and have no children
+SELECT COUNT(*)
+FROM patients.insurance_data_campusx
+WHERE smoker = 'Yes' AND children = 0;
+
+DELETE FROM patients.insurance_data_campusx
+WHERE smoker = 'Yes' AND children = 0;
